@@ -418,6 +418,10 @@ class LocalController {
      * @param {*} cod_lista - Código de lista seleccionado, o el id de un candidato en caso de agrupar por cargo.
      */
     seleccion_lista(cod_lista) {
+        if (Array.isArray(constants.listas_bloqueadas) &&
+            constants.listas_bloqueadas.includes(String(cod_lista))) {
+            return;
+        }
         this.seleccion.seleccion_lista(cod_lista);
     }
 

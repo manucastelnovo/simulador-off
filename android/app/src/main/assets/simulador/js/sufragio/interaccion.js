@@ -125,6 +125,21 @@ function desbindear_botones() {
  * @param {*} evento - Evento que contiene la opción que fue cliqueada.
  */
 function click_opcion(evento) {
+    if (Array.isArray(constants.listas_bloqueadas) && evento.currentTarget && evento.currentTarget.id) {
+        var _id_parts = evento.currentTarget.id.split('_');
+        var _bloqueado = false;
+        if (_id_parts[0] === 'lista' && constants.listas_bloqueadas.includes(String(_id_parts[1]))) {
+            _bloqueado = true;
+        } else if (_id_parts[0] === 'candidato' && _id_parts[1]) {
+            try {
+                var _cand = localController.businessData.get_candidaturas_one({ id_umv: _id_parts[1] });
+                if (_cand && constants.listas_bloqueadas.includes(String(_cand.cod_lista))) {
+                    _bloqueado = true;
+                }
+            } catch (e) {}
+        }
+        if (_bloqueado) return;
+    }
     let _votando = localController.seleccion.get_votando();
     if (aceptar_clicks && _votando) {
         var callback = null;
