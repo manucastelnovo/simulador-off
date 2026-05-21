@@ -73,3 +73,10 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Project-specific
+build-*.log
+build*.log
+optimize*.log
+screen*.png
+

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(grep -E \"\\(build.*\\\\.log|optimize.*\\\\.log|screen.*\\\\.png\\)$\")"
+    ]
+  }
+}
