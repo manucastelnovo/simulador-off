@@ -1,0 +1,16 @@
+Found 22814 webp files
+  2000/22814 (8.8%) - elapsed 8s
+  4000/22814 (17.5%) - elapsed 16s
+  6000/22814 (26.3%) - elapsed 23s
+  8000/22814 (35.1%) - elapsed 31s
+  10000/22814 (43.8%) - elapsed 39s
+  12000/22814 (52.6%) - elapsed 47s
+  14000/22814 (61.4%) - elapsed 54s
+  16000/22814 (70.1%) - elapsed 62s
+  18000/22814 (78.9%) - elapsed 70s
+  20000/22814 (87.7%) - elapsed 78s
+  22000/22814 (96.4%) - elapsed 85s
+
+Done in 89s
+Before: 75.0 MB, After: 32.0 MB, Saved: 43.0 MB
+Processed: 22814, Skipped (no improvement): 0, Errors: 0

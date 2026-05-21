@@ -1,0 +1,16 @@
+Found 22814 webp files
+
+--- Sample dimensions (5 random files) ---
+3936.26284.webp: 300x300, 2.1KB
+368.2330.webp: 300x300, 3.9KB
+4500.29925.webp: 300x300, 2.6KB
+5554.34923.webp: 300x300, 2.5KB
+4671.30493.webp: 300x300, 2.3KB
+
+--- Processing all (quality=50, max width=150px) ---
+  error: 1.0.webp: UNKNOWN: unknown error, open 'C:\dev\SimuOff\android\app\src\main\assets\simulador\imagenes_candidaturas\paraguay_internas_municipales_2026\1.0.webp'
+  error: 10.57.webp: UNKNOWN: unknown error, open 'C:\dev\SimuOff\android\app\src\main\assets\simulador\imagenes_candidaturas\paraguay_internas_municipales_2026\10.57.webp'
+
+Done in 85s
+Before: 75.0 MB, After: 75.0 MB, Saved: 0.0 MB
+Processed: 0, Skipped (no improvement): 0, Errors: 22814

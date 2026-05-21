@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+    <head>
+        <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="google" content="notranslate" />
+        <title>Simulador de la Boleta &Uacute;nica Electr&oacute;nica</title>
+        <script>
+        (function(){
+            if (location.protocol !== 'file:') return;
+            var origFetch = window.fetch;
+            window.fetch = function(input, init) {
+                var url = typeof input === 'string' ? input : (input && input.url);
+                if (!url || !/^(file:|[^:]*$|\.{1,2}\/|\/)/i.test(url)) {
+                    return origFetch ? origFetch.apply(this, arguments) : Promise.reject(new TypeError('no fetch'));
+                }
+                return new Promise(function(resolve, reject){
+                    try {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open((init && init.method) || 'GET', url, true);
+                        if (init && init.headers) {
+                            for (var h in init.headers) { try { xhr.setRequestHeader(h, init.headers[h]); } catch(_){} }
+                        }
+                        xhr.responseType = 'text';
+                        xhr.onload = function(){
+                            var status = xhr.status === 0 && xhr.responseText ? 200 : xhr.status;
+                            var body = xhr.responseText;
+                            resolve({
+                                ok: status >= 200 && status < 300,
+                                status: status,
+                                statusText: xhr.statusText || '',
+                                url: url,
+                                text: function(){ return Promise.resolve(body); },
+                                json: function(){ try { return Promise.resolve(JSON.parse(body)); } catch(e){ return Promise.reject(e); } },
+                                blob: function(){ return Promise.resolve(new Blob([body])); },
+                            });
+                        };
+                        xhr.onerror = function(){ reject(new TypeError('Failed to fetch (xhr shim): ' + url)); };
+                        xhr.send((init && init.body) || null);
+                    } catch (e) { reject(e); }
+                });
+            };
+        })();
+        </script>
+	<link rel="manifest" href="manifest.json">
+	<link rel="icon" href="img/favicon.ico">
+        <link rel="stylesheet" href="css/sufragio.css">
+        <link rel="stylesheet" href="flavors/chipa/sufragio/flavor.css">
+        <style>html,body{visibility:hidden}html.flavor-ready,html.flavor-ready body{visibility:visible}</style>
+        <script>
+        (function(){
+            function reveal(){ document.documentElement.classList.add('flavor-ready'); }
+            function watchBody(){
+                if (!document.body) return;
+                if (document.body.classList.length > 0) { reveal(); return; }
+                var obs = new MutationObserver(function(){
+                    if (document.body.classList.length > 0) { reveal(); obs.disconnect(); }
+                });
+                obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            }
+            if (document.body) watchBody();
+            else document.addEventListener('DOMContentLoaded', watchBody);
+            setTimeout(reveal, 4000);
+        })();
+        </script>
+
+        <!-- IE8 y versiones anteriores -->
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="css/ie8.css">
+        <![endif]-->
+        <script type="text/javascript" src="js/chancleta.js"></script>
+        <script type="text/javascript" src="js/patio.js"></script>
+        <script type="text/javascript" src="js/handlebars.js"></script>
+        <script type="text/javascript" src="js/imagenes.js"></script>
+        <script type="text/javascript" src="js/helpers.js"></script>
+        <script type="text/javascript" src="js/popup.js"></script>
+        <script type="text/javascript" src="js/eventos.js"></script>
+
+        <script type="text/javascript" src="js/teclado/base.js" ></script>
+        <script type="text/javascript" src="js/teclado/layouts.js" ></script>
+        <script type="text/javascript" src="js/teclado/tiles.js" ></script>
+        
+        <script type="text/javascript" src="js/boleta/compilador.js"></script>
+        <script type="text/javascript" src="js/boleta/helpers.js"></script>
+        <script type="text/javascript" src="js/boleta/funciones.js"></script>
+        
+        <script type="text/javascript" src="js/sufragio/ipc.js" ></script>
+        <script type="text/javascript" src="js/sufragio/voto.js"></script>
+        <script type="text/javascript" src="js/sufragio/interaccion.js"></script>
+        <script type="text/javascript" src="js/sufragio/base.js"></script>
+        <script type="text/javascript" src="js/sufragio/botonera.js"></script>
+        <script type="text/javascript" src="js/sufragio/show_hide.js"></script>
+        <script type="text/javascript" src="js/sufragio/pantallas.js"></script>
+        <script type="text/javascript" src="js/sufragio/templates.js"></script>
+        <script type="text/javascript" src="js/sufragio/asistida.js"></script>
+        <script type="text/javascript" src="js/sufragio/tiles.js"></script>
+        
+        <script type="text/javascript" src="js/sufragio/controller/dataService.js"></script>
+        <script type="text/javascript" src="js/sufragio/controller/seleccion.js"></script>
+        <script type="text/javascript" src="js/sufragio/controller/businessData.js"></script>
+        <script type="text/javascript" src="js/sufragio/controller/localController.js"></script>
+
+
+        <script type="text/javascript" src="js/presencia.js"></script>
+        <!-- esto esta ultimo a proposito -->
+        <script src="js/palier.js"></script>
+        <script src="js/baterias.js" ></script>
+    </head>
+    <body>
+        <div id="contenedor">
+            <div id="contenedor_izq">
+                <div id="encabezado"></div>
+                <div class="clear"></div>
+                <div id="contenedor_pantallas"></div>
+                <div id="contenedor_opciones"></div>
+            </div>
+        </div>
+        <div class="popup-box">
+        </div>
+    </body>
+</html>
