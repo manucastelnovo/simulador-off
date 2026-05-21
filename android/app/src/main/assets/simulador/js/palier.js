@@ -274,23 +274,38 @@ function _palier_load_data(){
      *  controller. Simulando lo que haría el controller.py del modulo sufragio
      *  via Zaguan.
      */
-    const url_prefix = `./datos/${ubicacion}`;
-    const categorias_json = "Categorias.json";
-    const candidaturas_json = "Candidaturas.json";
-    const agrupaciones_json = "Agrupaciones.json";
-    const boletas_json = "Boletas.json";
-
     const sort_by_posicion = (data) => {
         const data_clone = [...data]
         sortJsonArrayByProperty(data_clone, "posicion")
         return data_clone
     }
 
+    const build_encabezado = () => ({
+        pais:         window.localStorage.getItem('ub_eleccion')     || '',
+        distrito:     window.localStorage.getItem('ub_departamento') || '',
+        departamento: window.localStorage.getItem('ub_distrito')     || '',
+        localidad:    window.localStorage.getItem('ub_localidad')    || '',
+    });
+
+    // Fast path: datos inlineados en app.html.
+    if (typeof window.__INLINED_DATA__ !== 'undefined') {
+        const d = window.__INLINED_DATA__;
+        cargar_datos({
+            categorias: sort_by_posicion(d.categorias),
+            candidaturas: d.candidaturas,
+            agrupaciones: d.agrupaciones,
+            boletas: d.boletas,
+            encabezado: build_encabezado(),
+        });
+        return Promise.resolve();
+    }
+
+    const url_prefix = `./datos/${ubicacion}`;
     const all_promises = [
-        fetch(`${url_prefix}/${categorias_json}`).then((data) => data.json()),
-        fetch(`${url_prefix}/${candidaturas_json}`).then((data) => data.json()),
-        fetch(`${url_prefix}/${agrupaciones_json}`).then((data) => data.json()),
-        fetch(`${url_prefix}/${boletas_json}`).then((data) => data.json())
+        fetch(`${url_prefix}/Categorias.json`).then((data) => data.json()),
+        fetch(`${url_prefix}/Candidaturas.json`).then((data) => data.json()),
+        fetch(`${url_prefix}/Agrupaciones.json`).then((data) => data.json()),
+        fetch(`${url_prefix}/Boletas.json`).then((data) => data.json())
     ]
 
     return new Promise((resolve, reject) => {
@@ -302,22 +317,16 @@ function _palier_load_data(){
             agrupaciones,
             boletas
         ]) => {
-            const controller_data = {
+            cargar_datos({
                 categorias: sort_by_posicion(categorias),
                 candidaturas,
                 agrupaciones,
                 boletas,
-                encabezado: {
-                    pais:         window.localStorage.getItem('ub_eleccion')     || '',
-                    distrito:     window.localStorage.getItem('ub_departamento') || '',
-                    departamento: window.localStorage.getItem('ub_distrito')     || '',
-                    localidad:    window.localStorage.getItem('ub_localidad')    || '',
-                }
-            };            
-            cargar_datos(controller_data);
+                encabezado: build_encabezado(),
+            });
             resolve();
         }).catch(error => reject(error));
-    
+
     })
 }
 
@@ -474,12 +483,17 @@ function _palier_header_ubicacion(cod_ubicacion){
 function action_inicio(callback){
     /*
      * Carga las constants de la ubicacion.
+     * Si hay datos inlineados (app.html los embebe), evitamos el fetch.
      */
-   fetch("./constants/" + ubicacion +  ".json").then(
-	   r => r.json()
-   ).then(
-	   data => callback(data)
-   );
+    if (typeof window.__INLINED_CONSTANTS__ !== 'undefined') {
+        callback(window.__INLINED_CONSTANTS__);
+        return;
+    }
+    fetch("./constants/" + ubicacion + ".json").then(
+        r => r.json()
+    ).then(
+        data => callback(data)
+    );
 }
 
 function callback_constants(data, callback){
