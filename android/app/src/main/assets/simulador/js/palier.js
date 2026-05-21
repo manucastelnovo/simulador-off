@@ -245,7 +245,7 @@ function get_url_function() {
 function click_si_simulador(){
     // Hacemos override del click_is para adecuar al comportamiento del
     // simulador.
-    var ubic_preseteada = getUrlVar('ubicacion');   
+    var ubic_preseteada = getUrlVar('ubicacion');
     if (typeof(ubic_preseteada) != "undefined") {
         (window.top||window).location = "index.html#paso-3";
     } else {

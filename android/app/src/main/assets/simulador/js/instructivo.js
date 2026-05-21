@@ -58,7 +58,10 @@ function inicializacion() {
 
     document.getElementById("paso-5").addEventListener("click", mostrar_final);
 
-    document.getElementById("reset").addEventListener("click", inicio_demo);
+    document.getElementById("reset").addEventListener("click", function () {
+        var ub = window.localStorage.getItem("ubicacion") || "261.7.1";
+        window.location = "sufragio.html?ubicacion=" + ub;
+    });
 }
 
 if ("serviceWorker" in navigator) {
