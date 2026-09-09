@@ -1,0 +1,735 @@
+<title>Propuesta Simulador Generales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+  :root {
+    --ground:      #EEF1F4;
+    --surface:     #FFFFFF;
+    --surface-alt: #F5F7F9;
+    --ink:         #17212B;
+    --ink-soft:    #3C4A57;
+    --muted:       #64757F;
+    --rule:        #D7DEE4;
+    --rule-strong: #B4C0C9;
+    --accent:      #9E2036;
+    --accent-ink:  #9E2036;
+    --mark:        #1F6B4F;
+
+    --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --f-body:    "Source Serif 4", Georgia, "Times New Roman", serif;
+    --f-mono:    "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #11171C;
+      --surface:     #181F26;
+      --surface-alt: #1E262E;
+      --ink:         #E6ECF1;
+      --ink-soft:    #C2CDD6;
+      --muted:       #8A9AA5;
+      --rule:        #2C3740;
+      --rule-strong: #445059;
+      --accent:      #E4899A;
+      --accent-ink:  #F0A9B6;
+      --mark:        #5FBF97;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #11171C;
+    --surface:     #181F26;
+    --surface-alt: #1E262E;
+    --ink:         #E6ECF1;
+    --ink-soft:    #C2CDD6;
+    --muted:       #8A9AA5;
+    --rule:        #2C3740;
+    --rule-strong: #445059;
+    --accent:      #E4899A;
+    --accent-ink:  #F0A9B6;
+    --mark:        #5FBF97;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 15.5px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding: clamp(0px, 3vw, 36px) clamp(0px, 3vw, 36px) 60px;
+  }
+
+  .sheet {
+    max-width: 54rem;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: clamp(26px, 5vw, 60px) clamp(20px, 5vw, 60px) clamp(36px, 5vw, 60px);
+  }
+
+  /* ---------- portada ---------- */
+
+  .cover { padding-bottom: 40px; }
+
+  .eyebrow {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin: 0 0 26px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  h1 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.85rem, 5vw, 2.7rem);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    margin: 0 0 16px;
+    max-width: 18ch;
+  }
+
+  .cover-sub {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+    line-height: 1.3;
+    color: var(--ink);
+    margin: 0 0 6px;
+    max-width: 34ch;
+  }
+
+  .cover-sub2 {
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--muted);
+    margin: 0 0 34px;
+    max-width: 40ch;
+  }
+
+  .cover-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 22px 34px;
+    padding: 24px 0 0;
+    border-top: 3px solid var(--ink);
+  }
+
+  .cover-facts div { display: flex; flex-direction: column; gap: 4px; }
+
+  .cover-facts dt {
+    font-family: var(--f-mono);
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cover-facts dd {
+    margin: 0;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+
+  .cover-facts .big {
+    font-family: var(--f-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- secciones ---------- */
+
+  section {
+    padding-top: 34px;
+    margin-top: 34px;
+    border-top: 1px solid var(--rule);
+  }
+
+  h2 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 2.6vw, 1.35rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+  }
+
+  h2 .n {
+    font-family: var(--f-mono);
+    font-weight: 600;
+    font-size: 0.85em;
+    color: var(--accent-ink);
+    flex: none;
+  }
+
+  h3 {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin: 26px 0 10px;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  h3 .n {
+    font-family: var(--f-mono);
+    font-weight: 500;
+    font-size: 0.85em;
+    color: var(--muted);
+    flex: none;
+  }
+
+  h3:first-of-type { margin-top: 20px; }
+
+  p { margin: 0 0 13px; max-width: 70ch; color: var(--ink-soft); }
+  p:last-child { margin-bottom: 0; }
+  strong { font-weight: 600; color: var(--ink); }
+  em { font-style: italic; }
+
+  .lede { font-size: 1.02rem; color: var(--ink); }
+
+  .note {
+    font-family: var(--f-display);
+    font-size: 0.85rem;
+    color: var(--muted);
+    max-width: 64ch;
+  }
+
+  /* ---------- listas ---------- */
+
+  ul.marks { list-style: none; margin: 0 0 13px; padding: 0; max-width: 70ch; }
+
+  ul.marks li {
+    position: relative;
+    padding: 4px 0 4px 1.85rem;
+    color: var(--ink-soft);
+  }
+
+  ul.marks li::before {
+    position: absolute;
+    left: 0;
+    top: 4px;
+    font-family: var(--f-mono);
+    font-weight: 600;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  ul.yes li::before { content: "\2713"; color: var(--mark); }
+  ul.no  li::before { content: "\00D7"; color: var(--accent-ink); }
+  ul.dot li::before { content: "\2014"; color: var(--rule-strong); }
+
+  /* ---------- tablas ---------- */
+
+  .table-wrap { overflow-x: auto; margin: 0 0 13px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--f-display);
+    font-size: 0.87rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 10px 14px 10px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  th:last-child, td:last-child { padding-right: 0; }
+
+  thead th {
+    font-family: var(--f-mono);
+    font-size: 0.63rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule-strong);
+    white-space: nowrap;
+  }
+
+  .day {
+    font-family: var(--f-mono);
+    font-weight: 600;
+    color: var(--accent-ink);
+    white-space: nowrap;
+    width: 4rem;
+  }
+
+  .phase { font-weight: 600; color: var(--ink); width: 11rem; }
+
+  .deliverable { color: var(--muted); width: 10rem; }
+
+  .num {
+    font-family: var(--f-mono);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  th.num { text-align: right; }
+
+  .hrs { width: 6rem; }
+  .cost { width: 8rem; }
+
+  tfoot td {
+    border-top: 2px solid var(--ink);
+    border-bottom: none;
+    padding-top: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 0.95rem;
+  }
+
+  tfoot .label {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- total destacado ---------- */
+
+  .total-box {
+    border: 2px solid var(--ink);
+    background: var(--surface-alt);
+    padding: 20px 24px;
+    margin: 20px 0 22px;
+  }
+
+  .total-box p { margin: 0; max-width: 62ch; color: var(--ink-soft); font-size: 0.95rem; }
+  .total-box strong { white-space: nowrap; }
+
+  .split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 13px;
+    margin: 0 0 13px;
+  }
+
+  .split div { border: 1px solid var(--rule-strong); padding: 15px 17px; }
+
+  .split .pct {
+    font-family: var(--f-mono);
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--accent-ink);
+    display: block;
+    line-height: 1.2;
+  }
+
+  .split .amount {
+    font-family: var(--f-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--ink);
+    display: block;
+    margin: 4px 0 6px;
+  }
+
+  .split .when {
+    font-family: var(--f-display);
+    font-size: 0.83rem;
+    color: var(--muted);
+    display: block;
+    line-height: 1.4;
+  }
+
+  /* ---------- firmas ---------- */
+
+  .signatures {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px 46px;
+    margin-top: 28px;
+  }
+
+  .sig { padding-top: 44px; border-top: 1px solid var(--ink); }
+
+  .sig .role {
+    font-family: var(--f-mono);
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .sig .who {
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: 0.93rem;
+    display: block;
+    margin-bottom: 3px;
+    color: var(--muted);
+    border-bottom: 1px dashed var(--rule-strong);
+    padding-bottom: 1px;
+  }
+
+  .sig .date {
+    font-family: var(--f-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: block;
+  }
+
+  /* ---------- impresión / PDF ---------- */
+
+  @page { margin: 18mm 16mm; }
+
+  @media print {
+    :root,
+    :root:not([data-theme="light"]),
+    :root[data-theme="dark"] {
+      --ground:      #FFFFFF;
+      --surface:     #FFFFFF;
+      --surface-alt: #F5F7F9;
+      --ink:         #17212B;
+      --ink-soft:    #3C4A57;
+      --muted:       #64757F;
+      --rule:        #D7DEE4;
+      --rule-strong: #B4C0C9;
+      --accent:      #9E2036;
+      --accent-ink:  #9E2036;
+      --mark:        #1F6B4F;
+    }
+
+    body { background: #FFFFFF; padding: 0; font-size: 10.5pt; }
+    .sheet { border: none; max-width: none; padding: 0; }
+
+    /* El encabezado corriente del PDF ya rotula el documento. */
+    .eyebrow { display: none; }
+
+    .cover { break-after: page; padding-bottom: 0; }
+    section { border-top: 1px solid var(--rule); padding-top: 20px; margin-top: 24px; }
+    h2, h3 { break-after: avoid; }
+    ul.marks li, tr, .split div, .sig, .total-box { break-inside: avoid; }
+    thead { display: table-header-group; }
+    .signatures { break-inside: avoid; }
+  }
+</style>
+
+<div class="sheet">
+
+  <header class="cover">
+    <p class="eyebrow">Propuesta de desarrollo de software</p>
+    <h1>Propuesta técnica y económica</h1>
+    <p class="cover-sub">Simulador Oficial de la Máquina de Votación — Actualización a Elecciones Generales</p>
+    <p class="cover-sub2">Aplicación para tablet Android, funcionamiento sin conexión a internet.</p>
+
+    <dl class="cover-facts">
+      <div>
+        <dt>Fecha de elaboración</dt>
+        <dd>Septiembre 2026</dd>
+      </div>
+      <div>
+        <dt>Plazo de entrega</dt>
+        <dd>1 semana (7 días hábiles)</dd>
+      </div>
+      <div>
+        <dt>Costo total</dt>
+        <dd class="big">Gs. 1.500.000</dd>
+      </div>
+      <div>
+        <dt>Cliente</dt>
+        <dd>[Nombre del cliente]</dd>
+      </div>
+      <div>
+        <dt>Preparado por</dt>
+        <dd>[Tu nombre]</dd>
+      </div>
+      <div>
+        <dt>Validez de la propuesta</dt>
+        <dd>15 días</dd>
+      </div>
+    </dl>
+  </header>
+
+  <section>
+    <h2><span class="n">1.</span> Introducción</h2>
+    <p class="lede">El presente documento describe la propuesta técnica y económica para la <strong>actualización de la aplicación Android del Simulador Oficial de la Máquina de Votación a la modalidad de elecciones generales</strong>.</p>
+    <p>La aplicación se encuentra actualmente desarrollada, entregada y en funcionamiento sobre tablet Android, configurada para <strong>internas partidarias</strong>. En esa modalidad el elector elige entre movimientos internos de un mismo partido, y la pantalla se presenta con la identidad de dicho partido.</p>
+    <p>En las <strong>elecciones generales</strong> el escenario es distinto: el elector elige entre <strong>partidos políticos, alianzas y concertaciones</strong>, y la interfaz corresponde a la identidad institucional de la Justicia Electoral. Esta propuesta cubre el trabajo necesario para llevar la aplicación existente a esa modalidad, conservando íntegramente su funcionamiento sin conexión a internet.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">2.</span> Situación actual y alcance del cambio</h2>
+
+    <h3><span class="n">2.1</span> Lo que ya está construido y entregado</h3>
+    <ul class="marks dot">
+      <li>Aplicación Android instalable que replica el flujo completo del simulador oficial, paso a paso.</li>
+      <li>Funcionamiento <strong>100% sin conexión a internet</strong>: todos los datos y las imágenes viajan dentro de la aplicación.</li>
+      <li>Orientación horizontal fija, para reproducir la disposición de la máquina de votación.</li>
+      <li>Categorías electivas <strong>Intendente Municipal</strong> y <strong>Junta Municipal</strong>, esta última con voto preferente.</li>
+      <li>Pantallas de apertura, votación, confirmación, recuento y transmisión.</li>
+      <li>Configuración vigente: <strong>internas partidarias</strong>, un (1) distrito, agrupaciones cargadas como movimientos internos.</li>
+    </ul>
+
+    <h3><span class="n">2.2</span> Qué cambia al pasar a generales</h3>
+    <ul class="marks dot">
+      <li>Las agrupaciones dejan de ser movimientos internos y pasan a ser <strong>partidos, alianzas y concertaciones</strong>, cada una con su código y número de lista oficial.</li>
+      <li>El encabezado de la pantalla deja de mostrar el nombre del partido y pasa a la <strong>identidad institucional de la Justicia Electoral</strong>.</li>
+      <li>Cada agrupación incorpora su <strong>color y logotipo propio</strong>. En la versión actual todas las listas comparten un mismo marcador genérico en blanco y negro.</li>
+      <li>Se reconstruyen las boletas: combinaciones válidas por categoría, lista completa y voto en blanco.</li>
+      <li>Se carga la nueva nómina de candidatos con sus fotografías.</li>
+      <li>Se actualizan la fecha de la elección y los textos de las pantallas informativas.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">3.</span> Alcance del proyecto</h2>
+
+    <h3><span class="n">3.1</span> Trabajos incluidos</h3>
+    <ul class="marks yes">
+      <li>Relevamiento de los datos oficiales de la elección general y comparación con la configuración vigente.</li>
+      <li>Armado del nuevo juego de datos electorales: agrupaciones, listas, categorías y candidatos.</li>
+      <li>Conversión de las agrupaciones a partidos, alianzas y concertaciones, con código, número, nombre completo y nombre corto.</li>
+      <li>Reconstrucción de las boletas y de las validaciones de voto, conservando el voto preferente en Junta Municipal.</li>
+      <li>Actualización de la identidad visual: encabezado institucional, colores y logotipos por agrupación.</li>
+      <li>Carga de las fotografías de los candidatos y optimización automática de las imágenes para controlar el tamaño de la aplicación.</li>
+      <li>Actualización de la fecha de la elección y de los textos de apertura, recuento y transmisión.</li>
+      <li>Pruebas sobre la tablet del cliente, verificación del funcionamiento sin conexión y corrección de errores.</li>
+      <li>Compilación del archivo APK actualizado, firmado y listo para instalar.</li>
+      <li>Instalación en las tablets del cliente y entrega de instrucciones de uso.</li>
+    </ul>
+
+    <h3><span class="n">3.2</span> Exclusiones del alcance</h3>
+    <ul class="marks no">
+      <li>No se incluyen <strong>distritos adicionales</strong> al distrito configurado. Cada distrito extra se presupuesta por separado.</li>
+      <li>No se incluyen <strong>categorías electivas distintas</strong> a Intendente y Junta Municipal, tales como Gobernador, Junta Departamental o cargos nacionales.</li>
+      <li>No se incluye integración con sistemas externos de la Justicia Electoral.</li>
+      <li>No se incluye publicación en Google Play Store: el APK se entrega directamente.</li>
+      <li>No se incluyen votos reales ni transmisión de datos a ningún servidor.</li>
+      <li>No se incluye la digitalización manual de datos que el cliente no entregue en formato utilizable.</li>
+      <li>No se incluye versión para iPhone o iPad, ni provisión de tablets u otro hardware.</li>
+      <li>No se incluye soporte técnico posterior más allá del período de garantía de 15 días.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">4.</span> Plan de trabajo — 1 semana</h2>
+    <p>El proyecto se ejecutará en un plazo de 7 días, distribuidos según las fases que se detallan a continuación. El plazo comienza a correr desde la aprobación de la propuesta y la entrega de los datos oficiales por parte del cliente.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Día</th>
+            <th scope="col">Fase</th>
+            <th scope="col">Actividades</th>
+            <th scope="col">Entregable</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="day">Día 1</td>
+            <td class="phase">Análisis y relevamiento</td>
+            <td>Revisión de los listados oficiales de la elección general y comparación con el juego de datos vigente de internas.</td>
+            <td class="deliverable">Mapeo de datos y plan de conversión</td>
+          </tr>
+          <tr>
+            <td class="day">Día 2</td>
+            <td class="phase">Juego de datos</td>
+            <td>Carga de partidos, alianzas y concertaciones, listas, categorías y nómina de candidatos.</td>
+            <td class="deliverable">Datos electorales cargados</td>
+          </tr>
+          <tr>
+            <td class="day">Día 3</td>
+            <td class="phase">Motor de boletas</td>
+            <td>Reconstrucción de boletas, lista completa, voto en blanco y voto preferente en Junta Municipal.</td>
+            <td class="deliverable">Flujo de voto funcional</td>
+          </tr>
+          <tr>
+            <td class="day">Día 4</td>
+            <td class="phase">Identidad visual</td>
+            <td>Encabezado institucional, colores y logotipos por agrupación, fecha de la elección y textos informativos.</td>
+            <td class="deliverable">Interfaz actualizada</td>
+          </tr>
+          <tr>
+            <td class="day">Día 5</td>
+            <td class="phase">Imágenes y optimización</td>
+            <td>Carga de fotografías de candidatos, optimización de imágenes y control del tamaño de la aplicación.</td>
+            <td class="deliverable">Aplicación optimizada</td>
+          </tr>
+          <tr>
+            <td class="day">Día 6</td>
+            <td class="phase">Pruebas y ajustes</td>
+            <td>Testing sobre tablet Android, verificación del modo sin conexión, corrección de errores y ajuste de rendimiento.</td>
+            <td class="deliverable">Informe de pruebas</td>
+          </tr>
+          <tr>
+            <td class="day">Día 7</td>
+            <td class="phase">Entrega final</td>
+            <td>Compilación del APK, documentación, instalación en las tablets del cliente y presentación de funcionamiento.</td>
+            <td class="deliverable">APK + documentación</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">5.</span> Requisitos técnicos</h2>
+
+    <h3><span class="n">5.1</span> Tecnologías y herramientas</h3>
+    <ul class="marks dot">
+      <li>Base: aplicación Android ya desarrollada, que se actualiza sin rehacerse desde cero.</li>
+      <li>Datos locales: archivos embebidos en la aplicación, sin conexión a servidores.</li>
+      <li>Versión mínima de Android: 7.0 (API 24).</li>
+      <li>Orientación de pantalla: horizontal, para simular la máquina de votación.</li>
+      <li>Tamaño de pantalla objetivo: tablets de 7 a 12 pulgadas.</li>
+      <li>Interfaz en idioma español, fiel al diseño del simulador oficial.</li>
+    </ul>
+
+    <h3><span class="n">5.2</span> Entregables</h3>
+    <ul class="marks yes">
+      <li>Archivo APK instalable, firmado y listo para instalar en tablet Android.</li>
+      <li>Código fuente actualizado del proyecto.</li>
+      <li>Manual de instalación y uso básico, documento PDF de 1 a 3 páginas.</li>
+      <li>Garantía de correcciones por 15 días calendario desde la fecha de entrega.</li>
+    </ul>
+
+    <h3><span class="n">5.3</span> Requisitos a cargo del cliente</h3>
+    <p>Para ejecutar el trabajo dentro del plazo de una semana, el cliente entrega al inicio del proyecto:</p>
+    <ul class="marks dot">
+      <li>Listado oficial de partidos, alianzas y concertaciones habilitados, con su número de lista.</li>
+      <li>Nómina de candidatos a Intendente y a Junta Municipal por agrupación.</li>
+      <li>Logotipos de las agrupaciones y fotografías de los candidatos.</li>
+      <li>Distrito a configurar y fecha oficial de la elección.</li>
+      <li>Tablet de prueba o el modelo exacto, para validar compatibilidad.</li>
+    </ul>
+    <p class="note">Retrasos en la entrega de estos materiales extienden el plazo en la misma medida.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">6.</span> Propuesta económica</h2>
+    <p>A continuación se presenta el desglose de costos del proyecto:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Concepto</th>
+            <th scope="col" class="num hrs">Horas estimadas</th>
+            <th scope="col" class="num cost">Costo (Gs.)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Relevamiento de datos oficiales y plan de conversión</td>
+            <td class="num">6 hs</td>
+            <td class="num">200.000</td>
+          </tr>
+          <tr>
+            <td>Armado del juego de datos: partidos, alianzas, concertaciones y candidatos</td>
+            <td class="num">10 hs</td>
+            <td class="num">350.000</td>
+          </tr>
+          <tr>
+            <td>Adaptación del motor de boletas y validaciones de voto</td>
+            <td class="num">8 hs</td>
+            <td class="num">250.000</td>
+          </tr>
+          <tr>
+            <td>Identidad visual: encabezado institucional, colores y logotipos</td>
+            <td class="num">8 hs</td>
+            <td class="num">250.000</td>
+          </tr>
+          <tr>
+            <td>Carga y optimización de imágenes de candidatos</td>
+            <td class="num">6 hs</td>
+            <td class="num">200.000</td>
+          </tr>
+          <tr>
+            <td>Pruebas en tablet, correcciones y ajuste de rendimiento</td>
+            <td class="num">6 hs</td>
+            <td class="num">200.000</td>
+          </tr>
+          <tr>
+            <td>Compilación del APK, documentación y entrega final</td>
+            <td class="num">2 hs</td>
+            <td class="num">50.000</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td class="label">Total</td>
+            <td class="num">46 hs</td>
+            <td class="num">Gs. 1.500.000</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="total-box">
+      <p>El monto total de <strong>Gs. 1.500.000</strong> (un millón quinientos mil guaraníes) cubre íntegramente la actualización, las pruebas, la documentación y la entrega del proyecto dentro del plazo de una semana, incluyendo garantía de correcciones por 15 días calendario.</p>
+    </div>
+
+    <h3><span class="n">6.1</span> Condiciones de pago</h3>
+    <div class="split">
+      <div>
+        <span class="pct">50%</span>
+        <span class="amount">Gs. 750.000</span>
+        <span class="when">Al inicio del proyecto, al momento de aprobación de esta propuesta.</span>
+      </div>
+      <div>
+        <span class="pct">50%</span>
+        <span class="amount">Gs. 750.000</span>
+        <span class="when">A la entrega final, al recibir el APK funcional y la documentación.</span>
+      </div>
+    </div>
+
+    <h3><span class="n">6.2</span> Forma de pago</h3>
+    <ul class="marks dot">
+      <li>Transferencia bancaria a cuenta a convenir.</li>
+      <li>Pago en efectivo en guaraníes.</li>
+      <li>Los precios incluyen todos los impuestos aplicables.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">7.</span> Garantía y soporte</h2>
+    <p>Se ofrece una garantía de <strong>15 días calendario</strong> a partir de la fecha de entrega, durante la cual se realizarán correcciones de errores funcionales sin costo adicional. No se incluyen nuevas funcionalidades ni cambios en el alcance original dentro de este período.</p>
+    <p>Cualquier modificación al alcance original, adición de funcionalidades o cambio en los requerimientos después de la aprobación de esta propuesta será presupuestado por separado.</p>
+    <p>Las <strong>actualizaciones de datos posteriores a la entrega</strong> —cambios de candidatos, correcciones de listas o incorporación de nuevos distritos— no forman parte de la garantía y se presupuestan aparte.</p>
+
+    <div class="signatures">
+      <div class="sig">
+        <span class="role">Cliente</span>
+        <span class="who">[Nombre del cliente]</span>
+        <span class="date">Fecha ____ / ____ / 2026</span>
+      </div>
+      <div class="sig">
+        <span class="role">Proveedor</span>
+        <span class="who">[Tu nombre]</span>
+        <span class="date">Fecha ____ / ____ / 2026</span>
+      </div>
+    </div>
+  </section>
+
+</div>
