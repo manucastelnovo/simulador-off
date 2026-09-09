@@ -2,14 +2,14 @@ import { StatusBar, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 
-const UBICACION = '261.7.1';
+const UBICACION = '59.7.1';
 
 const PRESET_LOCALSTORAGE = `
   try {
-    localStorage.setItem('ub_eleccion',     'ASOCIACION NACIONAL REPUBLICANA');
+    localStorage.setItem('ub_eleccion',     'ELECCIONES MUNICIPALES');
     localStorage.setItem('ub_departamento', '7-ITAPUA');
     localStorage.setItem('ub_distrito',     '1-ALTO VERA');
-    localStorage.setItem('ub_localidad',    '308-ALTO VERA');
+    localStorage.setItem('ub_localidad',    '0-ALTO VERA');
     localStorage.setItem('ubicacion',       '${UBICACION}');
   } catch (e) {}
   true;
