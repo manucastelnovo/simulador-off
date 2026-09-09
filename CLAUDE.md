@@ -2,6 +2,28 @@
 
 React Native 0.85 wrapper around an existing **Electron** voting-machine simulator (Paraguay, "Simulador de la Boleta Única Electrónica"). The whole UI is the original HTML/CSS/JS app rendered inside `react-native-webview` from `file:///android_asset/simulador/index.html`. There is **no native UI** — `App.tsx` is just the WebView shell.
 
+## Active election
+
+**General municipal election 2026** (`paraguay_generales_municipales_2026`), district **Alto Verá, Itapúa**, location code **`59.7.1`**. Ballot: `INT` (Intendente Municipal, one selection) and `JUN` (Junta Municipal, preferential list). Two lists: Partido Colorado (#1, red) and Alianza por la Victoria de Alto Verá (#3, green).
+
+The Alianza is **blocked**: `listas_bloqueadas: ["575","577"]` in `constants/59.7.1.json` makes its list, its mayor and its 12 council candidates non-clickable, so the simulator only accepts a Colorado vote. That key is our own extension, not part of the official data — the guards live in `js/sufragio/interaccion.js` (`click_opcion`) and `js/sufragio/controller/localController.js` (`seleccion_lista`).
+
+The previous ANR internal election (`261.7.1`) lives on the `alto-vera-optimizado` branch.
+
+### Swapping to another election
+
+1. Download from `https://simuladoroficial.tsje.gov.py`: `constants/<ubicacion>.json`, `datos/<ubicacion>/{Categorias,Agrupaciones,Boletas,Candidaturas}.json`, and the candidate images. **The image path needs the dataset subfolder** — `imagenes_candidaturas/<juego_de_datos>/<id>.webp`; asking for `imagenes_candidaturas/<id>.webp` returns 403. Fetch them in one `curl -K` config file: firing ~30 separate `curl` calls in a loop gets the connections dropped.
+2. Re-apply `listas_bloqueadas` and set `precachear_imagenes` to `false` (no service worker under `file://`).
+3. Rewrite the JSONs compressed, then run `node optimize-images.js`.
+4. Run `node inline-datos.js <ubicacion>` — see below.
+5. Update `UBICACION` and the localStorage preset in `App.tsx`, and the fallback in `js/instructivo.js`.
+
+## Inlined data in `app.html` (regenerate it, never hand-edit)
+
+`app.html` embeds `window.__INLINED_CONSTANTS__` and `window.__INLINED_DATA__` in a single long line. `js/palier.js` short-circuits the `fetch` of `constants/` and `datos/` when those globals exist, so **editing the JSON files on disk is not enough** — without regenerating this block the app keeps rendering the previous election.
+
+Run `node inline-datos.js` from the project root. It rebuilds the block from the files on disk and refuses to write if it cannot find the existing block, so the two patches below are never clobbered.
+
 ## Why this path is `C:\dev\SimuOff` (not OneDrive)
 
 Windows MAX_PATH (260 chars) breaks the NDK/ninja step of the Android build when the project lives under the original OneDrive path. The RN project was moved here on purpose. Do not move it back.
@@ -77,6 +99,7 @@ C:\Android\Sdk\platform-tools\adb.exe forward tcp:9222 localabstract:webview_dev
 ## Files at project root (non-RN-template)
 
 - `App.tsx` — WebView shell. Keep minimal.
+- `inline-datos.js` — regenerates the inlined constants/data block in `app.html`.
 - `optimize-images.js` — webp batch compression script.
 - `devtools-probe.js` — DevTools protocol probe for debugging WebView state.
 - `build-*.log` — gradle output logs from past builds. Safe to delete.
@@ -86,4 +109,5 @@ C:\Android\Sdk\platform-tools\adb.exe forward tcp:9222 localabstract:webview_dev
 - Don't `npm install` random RN packages. The whole UI is a WebView; everything else is dead weight.
 - Don't move the project back into OneDrive or any long path.
 - Don't delete `flavors/chipa/` — `constants.flavor === "chipa"` everywhere.
+- Don't hand-edit the inlined block in `app.html`. Run `inline-datos.js`.
 - Don't switch the WebView source away from `file:///android_asset/` without also rewriting the asset paths used by the simulator JS (relative paths assume that root).
