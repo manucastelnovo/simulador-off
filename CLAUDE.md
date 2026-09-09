@@ -66,11 +66,17 @@ cd C:\dev\SimuOff\android
 
 Output: `android/app/build/outputs/apk/release/app-release.apk`.
 
+The Android SDK lives at `%LOCALAPPDATA%\Android\Sdk`. `android/local.properties` (gitignored) must point at it with **forward slashes** — backslashes are escape sequences in a `.properties` file and the path silently arrives mangled:
+
+```
+sdk.dir=C:/Users/<user>/AppData/Local/Android/Sdk
+```
+
 Signing: uses the auto-generated `debug.keystore` (RN init default). Fine for sideload; for Play Store, generate a real keystore and update the `release` block in `app/build.gradle`.
 
 Install on a connected device:
 ```powershell
-C:\Android\Sdk\platform-tools\adb.exe install -r android\app\build\outputs\apk\release\app-release.apk
+%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe install -r android\app\build\outputs\apk\release\app-release.apk
 ```
 
 Manifest sets `android:screenOrientation="landscape"` to match the desktop layout.
@@ -89,8 +95,8 @@ Amazon Fire tablet (model KFMUWI, Fire OS / Android 9 base) running Amazon's bun
 
 Then connect via DevTools:
 ```powershell
-$pid = (C:\Android\Sdk\platform-tools\adb.exe shell pidof com.simuladoroffline)
-C:\Android\Sdk\platform-tools\adb.exe forward tcp:9222 localabstract:webview_devtools_remote_$pid
+$pid = (%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe shell pidof com.simuladoroffline)
+%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe forward tcp:9222 localabstract:webview_devtools_remote_$pid
 # open chrome://inspect on PC, or query http://localhost:9222/json
 ```
 
